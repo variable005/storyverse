@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Daylight Train</title>
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Background Video */
+    .background-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      filter: brightness(50%);
+      z-index: -1;
+      animation: subtleMove 10s infinite alternate ease-in-out;
+    }
+
+    /* Soft Background Motion */
+    @keyframes subtleMove {
+      from { transform: translate(-50%, -50%) scale(1); }
+      to { transform: translate(-50%, -50%) scale(1.05); }
+    }
+
+    /* Story Container */
+    .story-container {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    /* Title with Glow */
+    .story-container h1 {
+      font-size: 40px;
+      color: #ff004f;
+      text-shadow: 0 0 20px rgba(255, 0, 79, 0.8);
+      margin-bottom: 20px;
+      animation: fadeIn 2s forwards;
+    }
+
+    /* Sentence Reveal */
+    .sentence {
+      font-size: 18px;
+      line-height: 1.6;
+      opacity: 0;
+      text-align: left;
+      max-width: 600px;
+      margin: auto;
+      animation: fadeInUp 1s forwards ease-in-out;
+      position: relative;
+    }
+
+    /* Glowing Word Effect */
+    .glow {
+      color: #ff004f;
+      text-shadow: 0 0 10px rgba(255, 0, 79, 0.7);
+    }
+
+    /* Floating Effect */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Back Button */
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      text-decoration: none;
+      background: rgba(255, 0, 79, 0.8);
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 0, 79, 1);
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255, 0, 79, 1);
+    }
+
+    /* Magic Particles */
+    .particle {
+      position: absolute;
+      background: rgba(255, 0, 79, 0.5);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      opacity: 0;
+      animation: riseParticles 3s infinite ease-in-out;
+    }
+
+    @keyframes riseParticles {
+      0% { transform: translateY(0px); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-100px); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background Video -->
+<video autoplay muted loop class="background-video">
+  <source src="o.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<!-- Background Sound -->
+<audio autoplay loop>
+  <source src="bb.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<!-- Story Content -->
+<div class="story-container">
+  <h1>The Daylight Train</h1>
+  <div id="story"></div>
+</div>
+
+<!-- Back Button -->
+<a href="index.html" class="back-btn">← Back</a>
+
+<!-- Magic Particles -->
+<script>
+  function createParticles() {
+    for (let i = 0; i < 15; i++) {
+      let particle = document.createElement("div");
+      particle.classList.add("particle");
+      document.body.appendChild(particle);
+
+      let xPos = Math.random() * window.innerWidth;
+      let yPos = Math.random() * window.innerHeight;
+
+      particle.style.left = `${xPos}px`;
+      particle.style.top = `${yPos}px`;
+
+      particle.style.animationDelay = `${Math.random() * 3}s`;
+    }
+  }
+  createParticles();
+</script>
+
+<!-- JavaScript for Sentence-by-Sentence Magic Reveal -->
+<script>
+  const storyText = [
+    "In the <span class='glow'>bright</span> town of Harukawa, whispers surrounded a forgotten train station.",
+    "Rumors spoke of the <span class='glow'>Daylight Train</span>, which appeared only on sunny days.",
+    "One morning, Hana, seeking solace, stumbled upon the station...",
+    "To her surprise, the Daylight Train emerged, its bright yellow cars shining like a beacon.",
+    "The conductor welcomed her aboard, promising a journey through memories long buried.",
+    "As the train departed, the landscapes outside morphed into vibrant scenes...",
+    "She saw her childhood home, sunlit meadows, and laughter-filled markets.",
+    "Each stop revealed a memory: lost loves, cherished moments, and dreams unfulfilled.",
+    "With each encounter, Hana's heart swelled with nostalgia and clarity.",
+    "Finally, the train arrived at a blooming cherry blossom station.",
+    "The conductor offered her a choice—to let go of the past or carry joy into the future.",
+    "Hana stepped off, leaving behind the burdens as the train faded into the horizon.",
+    "Under the cherry blossoms, she embraced a bright new beginning."
+  ];
+
+  function revealStory() {
+    let container = document.getElementById("story");
+    storyText.forEach((sentence, index) => {
+      let p = document.createElement("p");
+      p.innerHTML = sentence;
+      p.classList.add("sentence");
+      p.style.animationDelay = `${index * 1.5}s`; // Reveal each sentence slowly
+      container.appendChild(p);
+    });
+  }
+
+  setTimeout(revealStory, 1000);
+</script>
+
+</body>
+</html>
