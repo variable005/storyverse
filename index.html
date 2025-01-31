@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Storytelling Website</title>
+  <title>StoryVerse</title>
   <style>
-    /* Global Styling */
+    /* 🔹 Global Styles */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      scroll-behavior: smooth;
     }
 
     body {
@@ -19,7 +20,7 @@
       text-align: center;
     }
 
-    /* 🔹 Fixed & Enhanced Header */
+    /* 🔹 Fixed Header */
     header {
       display: flex;
       justify-content: space-between;
@@ -47,8 +48,6 @@
       list-style: none;
       display: flex;
       gap: 20px;
-      padding: 0;
-      margin: 0;
     }
 
     nav ul li {
@@ -59,41 +58,23 @@
       text-decoration: none;
       color: #ffffff;
       font-weight: 500;
-      transition: color 0.3s ease, transform 0.3s;
+      transition: 0.3s;
       padding: 5px 10px;
-      position: relative;
-    }
-
-    /* 🔹 Animated Underline */
-    nav ul li a::after {
-      content: "";
-      display: block;
-      width: 0;
-      height: 2px;
-      background: #ff004f;
-      transition: width 0.3s ease;
-      margin: auto;
     }
 
     nav ul li a:hover {
       color: #ff004f;
-      transform: scale(1.05);
+      transform: scale(1.1);
     }
 
-    nav ul li a:hover::after {
-      width: 100%;
-    }
-
-    /* 🔹 Enhanced Hero Section */
+    /* 🔹 Hero Section */
     .hero {
       height: 100vh;
       position: relative;
-      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      padding: 20px;
     }
 
     .background-video {
@@ -131,7 +112,7 @@
       opacity: 0.9;
     }
 
-    /* 🔹 Improved Buttons */
+    /* 🔹 Buttons */
     .btn {
       display: inline-block;
       margin-top: 20px;
@@ -142,7 +123,7 @@
       color: white;
       text-decoration: none;
       border-radius: 50px;
-      transition: all 0.3s ease;
+      transition: 0.3s;
       box-shadow: 0 0 15px rgba(255, 0, 79, 0.6);
     }
 
@@ -152,9 +133,9 @@
       box-shadow: 0 0 25px rgba(255, 0, 79, 1);
     }
 
-    /* 🔹 Story Teaser Section */
+    /* 🔹 Story Teaser */
     .story-teaser {
-      padding: 80px 20px;
+      padding: 100px 20px;
     }
 
     .story-teaser h2 {
@@ -172,54 +153,58 @@
       line-height: 1.5;
     }
 
-    /* 🔹 Grid Layout for New Shows */
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-      padding: 40px 20px;
+    /* 🔹 Chapters Section */
+    .chapters {
+      padding: 80px 20px;
+      background: #1a1a1a;
     }
 
-    .grid-item {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-      text-align: center;
-      padding: 10px;
-      transition: transform 0.3s;
-    }
-
-    .grid-item img {
-      width: 100%;
-      border-radius: 10px;
-    }
-
-    .grid-item h3 {
-      margin: 10px 0;
-      font-size: 18px;
+    .chapters h2 {
+      font-size: 36px;
       color: #ff004f;
+      text-shadow: 0 0 10px rgba(255, 0, 79, 0.7);
+      margin-bottom: 20px;
     }
 
-    .grid-item p {
-      font-size: 14px;
-      opacity: 0.8;
+    .chapters-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
-    .grid-item:hover {
+    .chapter-card {
+      width: 250px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .chapter-card:hover {
       transform: scale(1.05);
       box-shadow: 0 0 15px rgba(255, 0, 79, 0.5);
     }
 
-    /* 🔹 Fixed Footer */
+    .chapter-card h3 {
+      font-size: 20px;
+      color: #ff004f;
+      margin-bottom: 10px;
+    }
+
+    .chapter-card p {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    /* 🔹 Footer */
     footer {
       background: rgba(0, 0, 0, 0.8);
       padding: 15px 0;
       font-size: 14px;
       opacity: 0.8;
       text-align: center;
-      position: relative;
-      bottom: 0;
       width: 100%;
     }
   </style>
@@ -230,76 +215,65 @@
   <h1 class="logo">StoryVerse</h1>
   <nav>
     <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Chapters</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Contact</a></li>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#chapters">Chapters</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="cont.html">Contact</a></li> <!-- ✅ Fixed Contact Page Link -->
     </ul>
   </nav>
 </header>
 
-<section class="hero">
+<section class="hero" id="home">
   <video autoplay muted loop class="background-video">
     <source src="meow.mp4" type="video/mp4">
-    Your browser does not support the video tag.
   </video>
   <div class="hero-content">
     <h1>Welcome to <span class="highlight">StoryVerse</span></h1>
     <p>A world of imagination awaits...</p>
-    <a href="page1.html" class="btn">Start Reading</a> <!-- Link to the story page -->
+    <a href="#chapters" class="btn">Explore Chapters</a>
   </div>
 </section>
 
-<!-- Audio Element -->
-<audio id="background-music" loop autoplay>
-  <source src="mt.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-
+<!-- Story Teaser -->
 <section class="story-teaser">
   <h2>Discover the Tale</h2>
   <p>In a distant world, where shadows whisper secrets and stars hold mysteries, a journey begins...</p>
-  <a href="page1.html" class="btn">Read More</a> <!-- Link to the story page -->
 </section>
 
-<!-- Grid Layout for New Shows -->
-<section class="grid-container">
-  <h2>New Stories</h2>
-  <div class="grid-item">
-    <img src="story1.jpg" alt="Story 1">
-    <h3>Story 1</h3>
-    <p>The Whispering Shadows.</p>
-    <a href="page1.html" class="btn">Read More</a> <!-- Link to page1 -->
+<!-- Chapters Section (ALL CHAPTERS INCLUDED) -->
+<section class="chapters" id="chapters">
+  <h2>Chapters</h2>
+  <div class="chapters-container">
+    <div class="chapter-card">
+      <h3>Chapter 1</h3>
+      <p>The Whispering Shadows</p>
+      <a href="page1.html" class="btn">Read</a>
+    </div>
+    <div class="chapter-card">
+      <h3>Chapter 2</h3>
+      <p>The Daylight Train</p>
+      <a href="train.html" class="btn">Read</a>
+    </div>
+    <div class="chapter-card">
+      <h3>Chapter 3</h3>
+      <p>The Enigmatic Convenience Store</p>
+      <a href="conbini.html" class="btn">Read</a>
+    </div>
   </div>
-  <div class="grid-item">
-    <img src="story2.jpg" alt="Story 2">
-    <h3>Story 2</h3>
-    <p>The Daylight Train.</p>
-    <a href="train.html" class="btn">Read More</a> <!-- Link to train page -->
-  </div>
-  <div class="grid-item">
-    <img src="story3.jpg" alt="Story 3">
-    <h3>Story 3</h3>
-    <p>The Enigmatic Convenience Store.</p>
-    <a href="conbini.html" class="btn">Read More</a> <!-- Link to the story page -->
-  </div>
-  <!-- Add more grid items as needed -->
 </section>
+
+<!-- Background Music (Fixed Autoplay) -->
+<audio id="bg-music" autoplay loop>
+  <source src="mt.mp3" type="audio/mp3">
+</audio>
+
+<script>
+  document.getElementById("bg-music").play().catch(() => console.log("Autoplay blocked"));
+</script>
 
 <footer>
   <p>Developed by HARIOM SHARNAM</p>
 </footer>
-
-<script>
-  // Get audio element
-  const audio = document.getElementById('background-music');
-
-  // Ensure audio is not muted and play
-  audio.muted = false; // Ensure audio is not muted
-  audio.play().catch(() => {
-    // Handle autoplay failure if necessary
-  });
-</script>
 
 </body>
 </html>
