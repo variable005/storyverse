@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The River Knows Your Name</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* Background Video */
+        .background-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            filter: brightness(50%);
+            z-index: -1;
+            animation: subtleMove 10s infinite alternate ease-in-out;
+        }
+
+        /* Soft Background Motion */
+        @keyframes subtleMove {
+            from { transform: translate(-50%, -50%) scale(1); }
+            to { transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        /* Story Container */
+        .story-container {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            overflow-y: scroll;
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
+        }
+
+        .story-container::-webkit-scrollbar {
+            width: 0;
+            background: transparent;
+        }
+
+        /* Title with Glow */
+        .story-container h1 {
+            font-size: 40px;
+            color: #ff004f;
+            text-shadow: 0 0 20px rgba(255, 0, 79, 0.8);
+            margin-bottom: 20px;
+            animation: fadeIn 2s forwards;
+        }
+
+        /* Story Text */
+        .sentence {
+            font-size: 18px;
+            line-height: 1.6;
+            opacity: 0;
+            text-align: left;
+            max-width: 600px;
+            margin: 10px auto;
+            animation: fadeInUp 1s forwards ease-in-out;
+        }
+
+        /* Red Highlight for Random Words */
+        .red-word {
+            color: #ff004f;
+            text-shadow: 0 0 10px rgba(255, 0, 79, 0.7);
+        }
+
+        /* Floating Effect */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            background: rgba(255, 0, 79, 0.8);
+            color: white;
+            padding: 10px 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 0, 79, 1);
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 0, 79, 1);
+        }
+
+        /* Skip Button */
+        .skip-btn {
+            position: absolute;
+            bottom: 20px;
+            background: rgba(255, 0, 79, 0.8);
+            color: white;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .skip-btn:hover {
+            background: rgba(255, 0, 79, 1);
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 0, 79, 1);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background Video -->
+<video autoplay muted loop class="background-video">
+    <source src="riverstanding.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+<!-- Background Sound (Autoplay Fix) -->
+<audio id="bgAudio" autoplay loop>
+    <source src="in-slow-motion-inspiring-ambient-lounge.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<!-- Story Content -->
+<div class="story-container">
+    <h1>The River Knows Your Name</h1>
+    <div id="story"></div>
+</div>
+
+<!-- Back Button -->
+<a href="index.html" class="back-btn">← Back</a>
+
+<!-- Skip Button -->
+<button class="skip-btn" onclick="skipStory()">Skip</button>
+
+<!-- JavaScript for Sentence-by-Sentence Magic Reveal -->
+<script>
+    const storyText = [
+        "The afternoon sun burned bright, but the <span class='red-word'>river</span> stayed cold. Too cold.",
+        "Aiko stood at the edge, her silver-grey hair swaying in the wind as she stared into the <span class='red-word'>water</span>.",
+        "Something was <span class='red-word'>wrong</span>.",
+        "The <span class='red-word'>river</span> had always whispered, but today, it was <span class='red-word'>silent</span>. Still. Like it was waiting.",
+        "She didn’t remember why she came here. Her feet had simply carried her, like <span class='red-word'>instinct</span>. Or <span class='red-word'>fate</span>.",
+        "She crouched, peering into the glassy <span class='red-word'>water</span>. Her reflection stared back—grey hair, sharp eyes, a calm expression. But then… it <span class='red-word'>blinked</span>.",
+        "Aiko didn’t.",
+        "Her chest <span class='red-word'>tightened</span>.",
+        "Slowly, the reflection tilted its head.",
+        "The world around her seemed to blur, the warmth of the sun fading as a <span class='red-word'>chill</span> crept into her skin.",
+        "Then, the reflection opened its mouth.",
+        "\"Aiko,\" it <span class='red-word'>whispered</span>.",
+        "Aiko’s breath caught. She hadn’t <span class='red-word'>spoken</span>.",
+        "The reflection smiled. A slow, knowing smile. Then it whispered again—",
+        "\"That’s not your <span class='red-word'>name</span>.\"",
+        "Fingers, too <span class='red-word'>cold</span> to be human, latched onto her wrist.",
+        "The sky twisted. The trees warped. The <span class='red-word'>river</span> opened like a <span class='red-word'>mouth</span>, swallowing her whole.",
+        "She didn’t hit the <span class='red-word'>water</span>. She <span class='red-word'>fell through it</span>.",
+        "The next thing she knew, she was standing on the other side—inside the <span class='red-word'>reflection</span>.",
+        "She turned sharply to the shore.",
+        "There, standing at the river’s edge, was a girl. Silver-grey hair. Sharp eyes. A calm expression.",
+        "Aiko tried to scream, but no sound came out.",
+        "The girl on the shore—the new Aiko—watched her with a soft <span class='red-word'>smile</span>. Then, without a word, she turned and walked away.",
+        "And Aiko? Aiko was trapped in the river, watching."
+    ];
+
+    let index = 0;
+    let storyContainer = document.getElementById("story");
+
+    function revealNextSentence() {
+        if (index < storyText.length) {
+            const sentence = document.createElement("div");
+            sentence.classList.add("sentence");
+            sentence.innerHTML = storyText[index];
+            storyContainer.appendChild(sentence);
+            index++;
+            setTimeout(revealNextSentence, 2500);
+        }
+    }
+
+    window.onload = revealNextSentence;
+</script>
+
+</body>
+</html>
