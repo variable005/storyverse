@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -140,59 +141,61 @@
         }
     </style>
 </head>
+
 <body>
 
-<!-- Navigation Bar -->
-<header>
-    <h1 class="logo">StoryVerse</h1>
-    <nav>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Chapters</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-    </nav>
-</header>
+    <!-- Navigation Bar -->
+    <header>
+        <h1 class="logo">StoryVerse</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Chapters</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<!-- Hero Section -->
-<section class="hero">
-    <div class="hero-content">
-        <h1>Welcome to <span class="highlight">StoryVerse</span></h1>
-        <p id="tagline">A world of imagination awaits...</p>
-        <a href="#" class="btn">Start Reading</a>
-    </div>
-</section>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to <span class="highlight">StoryVerse</span></h1>
+            <p id="tagline">A world of imagination awaits...</p>
+            <a href="#" class="btn">Start Reading</a>
+        </div>
+    </section>
 
-<!-- Story Teaser -->
-<section class="story-teaser">
-    <h2>Discover the Tale</h2>
-    <p>In a distant world, where shadows whisper secrets and stars hold mysteries, a journey begins...</p>
-    <a href="#" class="btn">Read More</a>
-</section>
+    <!-- Story Teaser -->
+    <section class="story-teaser">
+        <h2>Discover the Tale</h2>
+        <p>In a distant world, where shadows whisper secrets and stars hold mysteries, a journey begins...</p>
+        <a href="#" class="btn">Read More</a>
+    </section>
 
-<!-- Footer -->
-<footer>
-    <p>© 2025 StoryVerse | All Rights Reserved</p>
-</footer>
+    <!-- Footer -->
+    <footer>
 
-<script>
-    // Typewriter effect for tagline
-    const tagline = document.getElementById("tagline");
-    const text = "A world of imagination awaits...";
-    let index = 0;
+    </footer>
 
-    function typeEffect() {
-        if (index < text.length) {
-            tagline.innerHTML += text.charAt(index);
-            index++;
-            setTimeout(typeEffect, 80);
+    <script>
+        // Typewriter effect for tagline
+        const tagline = document.getElementById("tagline");
+        const text = "A world of imagination awaits...";
+        let index = 0;
+
+        function typeEffect() {
+            if (index < text.length) {
+                tagline.innerHTML += text.charAt(index);
+                index++;
+                setTimeout(typeEffect, 80);
+            }
         }
-    }
 
-    tagline.innerHTML = "";
-    setTimeout(typeEffect, 500);
-</script>
+        tagline.innerHTML = "";
+        setTimeout(typeEffect, 500);
+    </script>
 
 </body>
+
 </html>
