@@ -1,228 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Enigmatic Convenience Store</title>
-  <style>
-    /* Global Styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <title>The Enigmatic Convenience Store | StoryVerse</title>
 
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #121212;
-      color: #ffffff;
-      text-align: center;
-      overflow: hidden;
-    }
+  <!-- Fonts & Icons -->
+  <!-- Fonts & Icons -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Quicksand:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    /* Background Video */
-    .background-video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      transform: translate(-50%, -50%);
-      object-fit: cover;
-      filter: brightness(50%);
-      z-index: -1;
-      animation: subtleMove 10s infinite alternate ease-in-out;
-    }
-
-    /* Soft Background Motion */
-    @keyframes subtleMove {
-      from { transform: translate(-50%, -50%) scale(1); }
-      to { transform: translate(-50%, -50%) scale(1.05); }
-    }
-
-    /* Story Container */
-    .story-container {
-      position: relative;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-
-    /* Title with Glow */
-    .story-container h1 {
-      font-size: 40px;
-      color: #ff004f;
-      text-shadow: 0 0 20px rgba(255, 0, 79, 0.8);
-      margin-bottom: 20px;
-      animation: fadeIn 2s forwards;
-    }
-
-    /* Sentence Reveal */
-    .sentence {
-      font-size: 18px;
-      line-height: 1.6;
-      opacity: 0;
-      text-align: left;
-      max-width: 600px;
-      margin: auto;
-      animation: fadeInUp 1s forwards ease-in-out;
-      position: relative;
-    }
-
-    /* Glowing Word Effect */
-    .glow {
-      color: #ff004f;
-      text-shadow: 0 0 10px rgba(255, 0, 79, 0.7);
-    }
-
-    /* Floating Effect */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Back Button */
-    .back-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      text-decoration: none;
-      background: rgba(255, 0, 79, 0.8);
-      color: white;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 5px;
-      transition: all 0.3s ease;
-    }
-
-    .back-btn:hover {
-      background: rgba(255, 0, 79, 1);
-      transform: scale(1.05);
-      box-shadow: 0 0 10px rgba(255, 0, 79, 1);
-    }
-
-    /* Magic Particles */
-    .particle {
-      position: absolute;
-      background: rgba(255, 0, 79, 0.5);
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      opacity: 0;
-      animation: riseParticles 3s infinite ease-in-out;
-    }
-
-    @keyframes riseParticles {
-      0% { transform: translateY(0px); opacity: 0; }
-      50% { opacity: 1; }
-      100% { transform: translateY(-100px); opacity: 0; }
-    }
-  </style>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-<!-- Background Video -->
-<video autoplay muted loop class="background-video">
-  <source src="conbini.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+  <!-- Navigation -->
+  <header>
+    <div class="container nav-container">
+      <a href="index.html" class="logo">Story<span>Verse</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#chapters">Chapters</a></li>
+      </ul>
+      <div class="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+      </div>
+    </div>
+  </header>
 
-<!-- Background Sound -->
-<audio autoplay loop>
-  <source src="gg.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
+  <div class="story-wrapper">
+    <!-- Video Background -->
+    <video autoplay muted loop playsinline class="video-bg">
+      <source src="conbini.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
 
-<!-- Story Content -->
-<div class="story-container">
-  <h1>The Enigmatic Convenience Store</h1>
-  <div id="story"></div>
-</div>
+    <div class="story-content">
+      <a href="index.html#chapters" class="back-link"><i class="fas fa-arrow-left"></i> Back to Chapters</a>
+      <h1 class="story-title">The Enigmatic Convenience Store</h1>
+      <div id="story"></div>
+    </div>
+  </div>
 
-<!-- Back Button -->
-<a href="index.html" class="back-btn">← Back</a>
+  <!-- Audio -->
+  <audio autoplay loop id="bg-audio">
+    <source src="gg.mp3" type="audio/mpeg">
+  </audio>
 
-<!-- Magic Particles -->
-<script>
-  function createParticles() {
-    for (let i = 0; i < 15; i++) {
-      let particle = document.createElement("div");
-      particle.classList.add("particle");
-      document.body.appendChild(particle);
+  <script src="js/script.js"></script>
 
-      let xPos = Math.random() * window.innerWidth;
-      let yPos = Math.random() * window.innerHeight;
+  <!-- Story Logic -->
+  <script>
+    const storyText = [
+      "In the heart of <span class='text-accent'>Kyoto</span>, nestled between bustling streets and serene temples, stood a quaint convenience store named <span class='text-accent'>Sakura Mart.</span>",
+      "Its red and white sign flickered gently in the daylight, yet it always seemed to be shrouded in an unusual aura, drawing in curious passersby.",
+      "One bright afternoon, <span class='text-accent'>Yuki</span>, a university student, stepped into Sakura Mart seeking snacks for her study session.",
+      "The door chimed softly as she entered, and the familiar scent of fresh onigiri and sweet mochi greeted her.",
+      "As she wandered through the aisles, she noticed something peculiar—a small, dusty shelf tucked away in the corner, filled with odd trinkets and ancient-looking items.",
+      "Intrigued, Yuki approached the shelf and picked up a beautifully crafted keychain shaped like a <span class='text-accent'>torii gate.</span>",
+      "Just then, the shopkeeper, an elderly woman with kind eyes, appeared beside her.",
+      "“Ah, you’ve found one of my treasures,” she said, her voice soft yet mysterious.",
+      "“Each item here holds a story.”",
+      "Yuki smiled, enchanted by the woman’s presence.",
+      "“What’s the story behind this keychain?” she asked, holding it up to the light.",
+      "The shopkeeper’s eyes sparkled with wisdom as she began to explain.",
+      "“This keychain belonged to a traveler who lost their way.",
+      "They were guided back to their path by a friendly spirit, who told them to carry a piece of the gate with them,” she said.",
+      "“Those who possess it will find guidance in times of uncertainty.”",
+      "Feeling a strange connection, Yuki decided to purchase the keychain.",
+      "As she made her way to the counter, she noticed the convenience store's clock ticking strangely, moving faster than usual.",
+      "She brushed it off, thinking it was just her imagination.",
+      "Later that evening, as Yuki sat at her desk studying, she felt a chill sweep through her room.",
+      "Glancing at the keychain on her desk, she remembered the shopkeeper's words.",
+      "Suddenly, her phone buzzed with a message from a friend, inviting her to a party nearby.",
+      "Feeling a surge of excitement, Yuki grabbed her things and left.",
+      "But as she stepped outside, she realized she had no idea how to get to the venue.",
+      "Frustrated, she hesitated, glancing back at the keychain.",
+      "The moment she touched it, a whisper echoed in her mind, guiding her toward a narrow alley she had never noticed before.",
+      "Following the whispers, Yuki found herself walking through the alley, which led her to a hidden street filled with vibrant lights and laughter.",
+      "She arrived at the party just in time, feeling an inexplicable sense of relief.",
+      "As she enjoyed the festivities, Yuki couldn’t shake off the feeling that the keychain had somehow brought her here.",
+      "With each passing hour, she pondered over the stories the elderly shopkeeper might share with her, realizing that the magic of the Sakura Mart wasn’t just in its items but in the connections they forged.",
+      "When the party ended, Yuki returned home, her heart filled with warmth and wonder.",
+      "The next day, she decided to visit Sakura Mart again, eager to learn more.",
+      "But when she arrived, she found the store seemingly closed, with a sign hanging that read, “Thank you for your visit!”",
+      "Confused, she stood there for a moment, clutching the keychain tightly.",
+      "As she turned to leave, she felt a gentle breeze and heard the faint sound of the shopkeeper’s voice, guiding her to the next adventure waiting just beyond the ordinary."
+    ];
 
-      particle.style.left = `${xPos}px`;
-      particle.style.top = `${yPos}px`;
-
-      particle.style.animationDelay = `${Math.random() * 3}s`;
-    }
-  }
-  createParticles();
-</script>
-
-<!-- JavaScript for Sentence-by-Sentence Magic Reveal -->
-<script>
-  const storyText = [
-    "In the heart of <span class='glow'>Kyoto</span>, nestled between bustling streets and serene temples, stood a quaint convenience store named <span class='glow'>Sakura Mart.</span>",
-    "Its red and white sign flickered gently in the daylight, yet it always seemed to be shrouded in an unusual aura, drawing in curious passersby.",
-    "One bright afternoon, <span class='glow'>Yuki</span>, a university student, stepped into Sakura Mart seeking snacks for her study session.",
-    "The door chimed softly as she entered, and the familiar scent of fresh onigiri and sweet mochi greeted her.",
-    "As she wandered through the aisles, she noticed something peculiar—a small, dusty shelf tucked away in the corner, filled with odd trinkets and ancient-looking items.",
-    "Intrigued, Yuki approached the shelf and picked up a beautifully crafted keychain shaped like a <span class='glow'>torii gate.</span>",
-    "Just then, the shopkeeper, an elderly woman with kind eyes, appeared beside her.",
-    "“Ah, you’ve found one of my treasures,” she said, her voice soft yet mysterious.",
-    "“Each item here holds a story.”",
-    "Yuki smiled, enchanted by the woman’s presence.",
-    "“What’s the story behind this keychain?” she asked, holding it up to the light.",
-    "The shopkeeper’s eyes sparkled with wisdom as she began to explain.",
-    "“This keychain belonged to a traveler who lost their way.",
-    "They were guided back to their path by a friendly spirit, who told them to carry a piece of the gate with them,” she said.",
-    "“Those who possess it will find guidance in times of uncertainty.”",
-    "Feeling a strange connection, Yuki decided to purchase the keychain.",
-    "As she made her way to the counter, she noticed the convenience store's clock ticking strangely, moving faster than usual.",
-    "She brushed it off, thinking it was just her imagination.",
-    "Later that evening, as Yuki sat at her desk studying, she felt a chill sweep through her room.",
-    "Glancing at the keychain on her desk, she remembered the shopkeeper's words.",
-    "Suddenly, her phone buzzed with a message from a friend, inviting her to a party nearby.",
-    "Feeling a surge of excitement, Yuki grabbed her things and left.",
-    "But as she stepped outside, she realized she had no idea how to get to the venue.",
-    "Frustrated, she hesitated, glancing back at the keychain.",
-    "The moment she touched it, a whisper echoed in her mind, guiding her toward a narrow alley she had never noticed before.",
-    "Following the whispers, Yuki found herself walking through the alley, which led her to a hidden street filled with vibrant lights and laughter.",
-    "She arrived at the party just in time, feeling an inexplicable sense of relief.",
-    "As she enjoyed the festivities, Yuki couldn’t shake off the feeling that the keychain had somehow brought her here.",
-    "With each passing hour, she pondered over the stories the elderly shopkeeper might share with her, realizing that the magic of the Sakura Mart wasn’t just in its items but in the connections they forged.",
-    "When the party ended, Yuki returned home, her heart filled with warmth and wonder.",
-    "The next day, she decided to visit Sakura Mart again, eager to learn more.",
-    "But when she arrived, she found the store seemingly closed, with a sign hanging that read, “Thank you for your visit!”",
-    "Confused, she stood there for a moment, clutching the keychain tightly.",
-    "As she turned to leave, she felt a gentle breeze and heard the faint sound of the shopkeeper’s voice, guiding her to the next adventure waiting just beyond the ordinary."
-  ];
-
-  function revealStory() {
-    let container = document.getElementById("story");
-    storyText.forEach((sentence, index) => {
-      setTimeout(() => {
+    function revealStory() {
+      let container = document.getElementById("story");
+      storyText.forEach((sentence, index) => {
         let p = document.createElement("p");
-        p.className = "sentence";
         p.innerHTML = sentence;
+        p.classList.add("story-sentence");
+        p.style.animationDelay = `${index * 2.5}s`; // Slower
         container.appendChild(p);
-      }, index * 3000); // Adjust the timing (3000ms = 3 seconds)
-    });
-  }
-  revealStory();
-</script>
+      });
+    }
 
+    // Particle Effect
+    function createParticles() {
+      const wrapper = document.querySelector('.story-wrapper');
+      for (let i = 0; i < 20; i++) {
+        let particle = document.createElement("div");
+        particle.style.position = "absolute";
+        particle.style.background = "rgba(255, 192, 203, 0.4)"; // Soft Pink
+        particle.style.width = Math.random() * 5 + "px";
+        particle.style.height = particle.style.width;
+        particle.style.borderRadius = "50%";
+        particle.style.left = Math.random() * 100 + "%";
+        particle.style.top = Math.random() * 100 + "%";
+        particle.style.animation = `riseParticles ${Math.random() * 10 + 10}s infinite linear`; // Slower
+        particle.style.pointerEvents = "none";
+        wrapper.appendChild(particle);
+      }
+    }
+
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `
+            @keyframes riseParticles {
+                0% { transform: translateY(0); opacity: 0; }
+                50% { opacity: 0.5; }
+                100% { transform: translateY(-100vh); opacity: 0; }
+            }
+        `;
+    document.head.appendChild(styleSheet);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Audio Autoplay Fix
+      document.body.addEventListener('click', function () {
+        var audio = document.getElementById('bg-audio');
+        if (audio.paused) {
+          audio.volume = 0.5;
+          audio.play().catch(e => console.log("Audio play prevented"));
+        }
+      }, { once: true });
+
+      setTimeout(revealStory, 1000);
+      createParticles();
+    });
+  </script>
 </body>
+
 </html>
