@@ -9,11 +9,20 @@ let gameState = {
 
 const storyData = [
     // === PROLOGUE: THE SILENCE ===
+    // === PROLOGUE: THE SILENCE ===
     {
         id: 0,
         bg: 'images/vn_manga_rooftop_ref.png', // Manga Night Rooftop
         speaker: 'Haru',
         text: "The rooftop. They said it was just a place, a forgotten patch of concrete reaching for the sky.",
+        memory: "The City will remember this silence."
+    },
+    {
+        id: 1,
+        bg: '#000',
+        type: '3d', // TRIGGER 3D MODE
+        speaker: 'Haru',
+        text: "(I drifted into the void. Use WASD to float... The stars are cold.)",
     },
     {
         id: 1,
@@ -472,3 +481,115 @@ function chooseOption(nextId) {
         loadStep(currentStep);
     }
 }
+
+// === MEMORY SYSTEM ===
+const memoryNotification = document.getElementById('memory-notification');
+
+function showNotification(text) {
+    memoryNotification.innerText = text;
+    memoryNotification.classList.add('show');
+    setTimeout(() => {
+        memoryNotification.classList.remove('show');
+    }, 4000); // Hide after 4s
+}
+
+// === 3D ENGINE (Three.js) ===
+const container3D = document.getElementById('container-3d');
+let camera, scene, renderer;
+let is3DMode = false;
+let particles;
+
+function init3D() {
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
+    // Remove default fog to see stars clearly, or keep it for depth
+    scene.fog = new THREE.FogExp2(0x000000, 0.002);
+
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    renderer = new THREE.WebGLRenderer({
+        alpha: true
+    }); // Transparent bg
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container3D.appendChild(renderer.domElement);
+
+    // Stars
+    const geometry = new THREE.BufferGeometry();
+    const vertices = [];
+    for (let i = 0; i < 10000; i++) {
+        vertices.push(THREE.MathUtils.randFloatSpread(2000)); // x
+        vertices.push(THREE.MathUtils.randFloatSpread(2000)); // y
+        vertices.push(THREE.MathUtils.randFloatSpread(2000)); // z
+    }
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+    const particlesMaterial = new THREE.PointsMaterial({
+        color: 0x888888
+    });
+    particles = new THREE.Points(geometry, particlesMaterial);
+    scene.add(particles);
+
+    // WASD Controls
+    document.addEventListener('keydown', onDocumentKeyDown, false);
+    animate();
+}
+
+function onDocumentKeyDown(event) {
+    if (!is3DMode) return;
+    var keyCode = event.which;
+    const speed = 0.5;
+    if (keyCode == 87) { // W
+        camera.position.z -= speed;
+    } else if (keyCode == 83) { // S
+        camera.position.z += speed;
+    } else if (keyCode == 65) { // A
+        camera.position.x -= speed;
+    } else if (keyCode == 68) { // D
+        camera.position.x += speed;
+    }
+
+    // Add simple rotation for effect
+    camera.rotation.z += 0.001;
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    if (!is3DMode) return;
+
+    // Slight ambient rotation
+    particles.rotation.x += 0.0001;
+    particles.rotation.y += 0.0001;
+
+    renderer.render(scene, camera);
+}
+
+// Initialize 3D on load
+init3D();
+
+// Override loadStep to include 3D and Memory checks
+const originalLoadStep = loadStep;
+loadStep = function (step) {
+
+    // Memory Check
+    if (step.memory) {
+        showNotification(step.memory);
+    }
+
+    // 3D Mode Check
+    if (step.type === '3d') {
+        is3DMode = true;
+        container3D.style.display = 'block';
+        dialogueBox.style.display = 'none'; // Hide text during 3D? Or keep it? Let's hide for "exploration"
+
+        // Contextual "Exit" overlay or timed event could go here
+        // For this demo, let's keep the dialogue box visible so user can click to "next" out of 3D
+        dialogueBox.style.display = 'block';
+        vnBg.style.opacity = '0'; // Hide 2D background
+    } else {
+        is3DMode = false;
+        container3D.style.display = 'none';
+        vnBg.style.opacity = '1';
+    }
+
+    originalLoadStep(step);
+};

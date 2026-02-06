@@ -13,6 +13,8 @@
         rel="stylesheet">
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <!-- Three.js (for 3D Scenes) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         /* Visual Novel Specific Overrides */
         body {
@@ -262,6 +264,42 @@
         .day-mode {
             filter: invert(1) grayscale(1) contrast(1.2) brightness(1.2);
         }
+
+        /* 3D Container */
+        #container-3d {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            display: none;
+            /* Hidden by default */
+        }
+
+        /* Memory Notification */
+        .memory-notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-left: 4px solid var(--accent-gold);
+            color: #fff;
+            padding: 15px 25px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            border-radius: 4px;
+            z-index: 1000;
+            transform: translateX(-100%);
+            opacity: 0;
+            transition: all 0.5s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .memory-notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -277,6 +315,12 @@
 
     <!-- VN Container -->
     <div id="vn-container">
+        <!-- 3D Layer -->
+        <div id="container-3d"></div>
+
+        <!-- Notification Layer -->
+        <div id="memory-notification" class="memory-notification">It will remember that.</div>
+
         <!-- Background Layer -->
         <div id="vn-bg"></div>
         <div class="vn-overlay"></div>
