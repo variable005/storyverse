@@ -1,54 +1,58 @@
-// Visual Novel Script & Engine v4.0 - Polished Edition
-// Supports: Branching, State Tracking, Multiple Endings, Cinematic Effects, CSS Filters, Layered Sprites
+// Visual Novel Script & Engine v5.0 - Ultimate Edition
+// Supports: Parallax, Glitch, Atmosphere, Multiple Routes, Persistent Data
 
-let gameState = {
+const gameState = {
     metEmi: false,
     knowsTruth: false,
-    hasDagger: false
+    hasDagger: false,
+    belief: 'unknown' // 'believer' or 'skeptic'
 };
 
+// Check for True Ending availability
+const endingsReached = parseInt(localStorage.getItem('sv_endings') || '0');
+const isTrueEndingAvailable = endingsReached >= 1;
+
 const storyData = [
-    // === PROLOGUE: THE SILENCE ===
+    // === PROLOGUE ===
     {
         id: 0,
         bg: 'pictures/empty roof dark.png',
         speaker: 'Haru',
         text: "The rooftop. They said it was just a place, a forgotten patch of concrete reaching for the sky.",
-        memory: "The City remembers."
+        memory: "The City remembers.",
+        atmosphere: true
     },
     {
         id: 1,
         bg: 'pictures/empty roof dark.png',
         speaker: 'Haru',
         text: "But to me, it was the only sanctuary in a city that choked me with its endless, performative noise.",
+        atmosphere: true
     },
     {
         id: 2,
         bg: 'pictures/empty roof dark.png',
         speaker: 'Haru',
         text: "Down below, life was a performance. A cacophony of feigned emotions. Here, the silence was profound.",
-    },
-    {
-        id: 3,
-        bg: 'pictures/empty roof dark.png',
-        speaker: 'Haru',
-        text: "I needed the stark, honest cold of the wind. The dizzying height that made human concerns shrink to microscopic dust.",
+        atmosphere: true
     },
 
     // === SCENE 1: THE MEETING ===
     {
         id: 10,
         bg: 'pictures/empty roof dark.png',
-        character: 'pictures/ghost sittig .png', // Ghost sitting
+        character: 'pictures/ghost sittig .png',
         speaker: 'Haru',
         text: "That's where I saw her. A statue carved from shadow and moonlight.",
+        atmosphere: true
     },
     {
         id: 11,
         bg: 'pictures/empty roof dark.png',
         character: 'pictures/ghost sittig .png',
         speaker: '',
-        text: "She sat on the very edge. Reckless. Unbound. Her black skirt melted into the gloom, her pale skin luminous.",
+        text: "She sat on the very edge. Reckless. Unbound. Her black skirt melted into the gloom.",
+        atmosphere: true
     },
     {
         id: 12,
@@ -56,28 +60,16 @@ const storyData = [
         character: 'pictures/ghost sittig .png',
         speaker: 'Haru',
         text: "(I didn't speak. My breath hitched. Another soul seeking the same profound isolation.)",
-    },
-    {
-        id: 13,
-        bg: 'pictures/empty roof dark.png',
-        character: 'pictures/ghost sittig .png',
-        speaker: '',
-        text: "The silence between us wasn't awkward. It was ancient. Comfortable.",
-    },
-    {
-        id: 14,
-        bg: 'pictures/empty roof dark.png',
-        character: 'pictures/ghost sittig .png',
-        speaker: 'Haru',
-        text: "Night after night, I returned. She was always there. We never exchanged names.",
+        atmosphere: true
     },
 
-    // === SCENE 2: THE QUESTION ===
+    // === SCENE 2: THE QUESTION (BRANCHING POINT) ===
     {
         id: 20,
-        bg: 'pictures/empty roof with moon.png', // Moon visible
-        character: 'pictures/ghost lookikin .png', // Looking closer
+        bg: 'pictures/empty roof with moon.png',
+        character: 'pictures/ghost lookikin .png',
         speaker: 'Girl',
+        effect: 'glitch', // Glitch on first direct interaction
         text: "Do you believe in ghosts?"
     },
     {
@@ -86,10 +78,12 @@ const storyData = [
         character: 'pictures/ghost lookikin .png',
         choice: true,
         options: [
-            { text: "Depends on the ghost.", nextId: 22 },
-            { text: "No.", nextId: 22 }
+            { text: "Depends on the ghost.", nextId: 22, effect: () => gameState.belief = 'believer' },
+            { text: "No. Dead is dead.", nextId: 100, effect: () => gameState.belief = 'skeptic' } // Jump to Skeptic Route
         ]
     },
+
+    // === ROUTE A: BELIEVER (Original + Expanded) ===
     {
         id: 22,
         bg: 'pictures/empty roof with moon.png',
@@ -102,262 +96,174 @@ const storyData = [
         bg: 'pictures/empty roof with moon.png',
         character: 'pictures/ghost lookikin .png',
         speaker: '',
-        text: "She turned just enough for me to see the glint in her eyes. Ancient, distant, and utterly, profoundly sad."
+        text: "She turned. Her eyes held the weight of oceans."
     },
-
-    // === SCENE 3: THE CONVERSATION ===
     {
         id: 30,
-        bg: 'pictures/empty roof dark.png',
-        character: 'pictures/ghost sittig .png', // Reusing sitting pose for generic talk
+        bg: 'pictures/empty side of roof.png', // NEW ASSET USAGE
+        character: 'pictures/ghost sittig .png',
         speaker: 'Haru',
-        text: "I found myself speaking. Words spilling out like blood. About the lies down below. The people who smiled with knives.",
+        text: "We spent nights just watching the city breathe.",
+        atmosphere: true
     },
-    {
-        id: 31,
-        bg: 'pictures/empty roof dark.png',
-        character: 'pictures/ghost lookikin .png',
-        speaker: '',
-        text: "She listened. Always. And sometimes, she spoke too. Her voice was like old paper, brittle yet resonant."
-    },
-    {
-        id: 32,
-        bg: 'pictures/empty roof dark.png',
-        character: 'pictures/ghost lookikin .png',
-        speaker: 'Girl',
-        text: "I remember cities submerged beneath forgotten oceans... promises broken by the first frost..."
-    },
-
-    // === SCENE 4: THE DAGGER ===
     {
         id: 40,
         bg: 'pictures/empty roof dark.png',
-        foreground: 'pictures/dagger.png', // Floating dagger or hand with dagger
+        foreground: 'pictures/dagger.png',
         speaker: '',
-        text: "One starless night, she handed me something. Her fingers were cold as marble."
-    },
-    {
-        id: 41,
-        bg: 'pictures/empty roof dark.png',
-        foreground: 'pictures/dagger.png',
-        speaker: 'Girl',
-        text: "You ever been in love?"
-    },
-    {
-        id: 42,
-        bg: 'pictures/empty roof dark.png',
-        foreground: 'pictures/dagger.png',
-        speaker: 'Haru',
-        text: "...Once. Thought it was real."
+        text: "Then came the night of the offering. She handed me cold iron."
     },
     {
         id: 43,
         bg: 'pictures/empty roof dark.png',
         foreground: 'pictures/dagger.png',
         speaker: 'Girl',
-        text: "Love is like this. Looks beautiful. But hold it wrong... and you'll bleed."
-    },
-    {
-        id: 44,
-        bg: 'pictures/empty roof dark.png',
-        speaker: 'Haru',
-        text: "(I stared at the blade. When I looked up... she was gone.)"
+        text: "Love is like this. Beautiful. Until it cuts.",
+        effect: 'glitch'
     },
     {
         id: 45,
         bg: 'pictures/empty roof dark.png',
         speaker: '',
-        text: "Just... nothing. A complete and sudden void. She had dissolved into the cool night air.",
+        text: "She vanished. Dissolved into the fog.",
+        effect: 'flash'
     },
-
-    // === SCENE 5: THE TRUTH ===
     {
         id: 50,
-        bg: 'pictures/looby.png', // Lobby
-        speaker: 'Haru',
-        text: "A week passed. The absence was a sharp ache. I found the old security guard, Kohee Sama, in the lobby."
-    },
-    {
-        id: 51,
         bg: 'pictures/looby.png',
-        character: 'pictures/old man .png', // Old man sprite
         speaker: 'Haru',
-        text: "I asked about her. A girl. Black skirt. Long hair."
-    },
-    {
-        id: 52,
-        bg: 'pictures/looby.png',
-        character: 'pictures/old man .png',
-        effect: 'shake', // Shake effect for shock
-        speaker: 'Kohee Sama',
-        text: "You... you saw her?"
+        text: "I needed answers. I went to the lobby."
     },
     {
         id: 53,
         bg: 'pictures/looby.png',
         character: 'pictures/old man .png',
+        effect: 'shake',
         speaker: 'Kohee Sama',
-        text: "She jumped. Years ago. Right where you described. No one claimed the body. They say her spirit never left."
+        text: "She jumped years ago. No one claimed the body. Her spirit never left."
     },
-    {
-        id: 54,
-        bg: '#000', // Fade to black for impact
-        speaker: 'Haru',
-        text: "(A cold, hard truth crystallized. I had shared intimate moments with a ghost.)"
-    },
-
-    // === SCENE 6: THE OFFERING & THE WARNING ===
-    {
-        id: 60,
-        bg: 'pictures/empty roof with moon.png',
-        speaker: 'Haru',
-        text: "I returned to the rooftop. The dagger was still there, lying on the ledge. A silent sentinel."
-    },
-    {
-        id: 61,
-        bg: 'pictures/empty roof with moon.png',
-        foreground: 'pictures/dagger lying.png', // Dagger on ledge if available or just reuse dagger.png
-        speaker: 'Haru',
-        text: "(I placed it back. A peace offering. A farewell.)"
-    },
-    {
-        id: 62,
-        bg: 'pictures/empty roof with moon.png',
-        speaker: 'Haru',
-        text: "\"I would've bled for you.\""
-    },
-    {
-        id: 63,
-        bg: 'pictures/empty roof with moon.png',
-        effect: 'flash', // Flash effect for the whisper
-        speaker: 'Voice',
-        text: "“Don’t trust the one who comes next.”"
-    },
-    {
-        id: 64,
-        bg: 'pictures/empty roof with moon.png',
-        speaker: 'Haru',
-        text: "I spun around. Nothing. Only the night."
-    },
-
-    // === SCENE 7: EMI (THE STRANGER) ===
     {
         id: 70,
-        bg: 'pictures/empty roof day.png', // Day Mode
-        speaker: '',
-        text: "Day 4. Noon. The harsh sun stripped the mystery away. The dagger was gone.",
-    },
-    {
-        id: 71,
         bg: 'pictures/empty roof day.png',
-        speaker: 'Voice',
-        text: "\"It's bad form to leave your trash behind.\""
+        speaker: '',
+        text: "Day 4. Noon. The dagger was gone.",
     },
     {
         id: 72,
         bg: 'pictures/empty roof day.png',
-        character: 'pictures/other girl.png', // Emi
-        speaker: '',
-        text: "A woman stood there. Canary-yellow coat. Sharp bob. Loud. Present. Emi."
-    },
-    {
-        id: 73,
-        bg: 'pictures/empty roof day.png',
         character: 'pictures/other girl.png',
         speaker: 'Emi',
-        text: "I'm Emi. New night-shift architect. You aren't supposed to be up here."
-    },
-    {
-        id: 74,
-        bg: 'pictures/empty roof day.png',
-        character: 'pictures/other girl.png',
-        speaker: 'Haru',
-        text: "(She smelled like the wild scent the ghost carried. She stared at the dagger's spot. Her shadow... reached out.)"
-    },
-    {
-        id: 75,
-        bg: 'pictures/empty roof day.png',
-        character: 'pictures/other girl.png',
-        speaker: 'Emi',
-        text: "She told you about the bleeding, didn't she? She was always melodramatic. But she forgot the important part..."
+        text: "I'm Emi. You must be the one talking to the air."
     },
     {
         id: 76,
         bg: 'pictures/empty roof day.png',
-        character: 'pictures/other girl.png',
+        character: 'pictures/other girk2.png', // NEW ASSET USAGE (Expression change)
         speaker: 'Emi',
         text: "\"Once you touch the iron, you belong to the heights.\""
     },
     {
-        id: 77,
-        bg: 'pictures/empty roof day.png',
-        character: 'pictures/other girl.png',
-        speaker: 'Emi',
-        text: "I am the reason she's a story and I'm a person. She gave you the dagger to protect you from me. But you left it."
-    },
-
-    // === ENDING ===
-    {
         id: 80,
         bg: 'pictures/empty roof day.png',
-        character: 'pictures/other girl.png',
-        foreground: 'pictures/dagger 4.png', // Dagger in hand / thrown
-        speaker: 'Emi',
-        text: "She tossed the dagger. It hung in the air, defying gravity, pointed at my chest."
-    },
-    {
-        id: 81,
-        bg: 'pictures/empty roof day.png',
-        character: 'pictures/other girl.png',
+        character: 'pictures/other girk2.png',
         foreground: 'pictures/dagger 4.png',
         speaker: 'Emi',
-        text: "Run. Or jump. Either way, the performance is over."
-    },
-    {
-        id: 82,
-        bg: 'pictures/looby.png', // Back to lobby
-        speaker: 'Haru',
-        text: "I ran. I needed answers. I found a young guard at the desk."
-    },
-    {
-        id: 83,
-        bg: 'pictures/looby.png',
-        speaker: 'Haru',
-        text: "Where is Kohee Sama? The old man?"
-    },
-    {
-        id: 84,
-        bg: 'pictures/looby.png',
-        speaker: 'Guard',
-        text: "Kohee Sama? No one here by that name. Wait... look at the history wall."
-    },
-    {
-        id: 85,
-        bg: 'pictures/group.png', // Old photo
-        speaker: '',
-        text: "A black and white photo from forty years ago. Construction crew. In the back... was the man I spoke to."
-    },
-    {
-        id: 86,
-        bg: '#000',
-        speaker: '',
-        text: "CAPTION: Kohee Sama (1942–1986). Lost in the roof-collapse incident.",
-    },
-    {
-        id: 87,
-        bg: '#000',
-        speaker: 'Haru',
-        text: "Everyone I had spoken to since entering the building was already dead.",
+        text: "Run. Or jump. The performance is over.",
+        effect: 'shake'
     },
     {
         id: 88,
         bg: '#000',
         speaker: '',
-        text: "FIN.",
+        text: "ENDING A: The Witness. (Try saying 'No' next time...)",
+        end: true,
         choice: true,
         options: [
-            { text: "Replay Story", nextId: 0, effect: () => { location.reload(); } }, // Reload for clean state
-            { text: "Return to Menu", nextId: 0, effect: () => { window.location.href = 'index.html'; } }
+            { text: "Restart", nextId: 0, effect: () => { localStorage.setItem('sv_endings', (endingsReached + 1)); location.reload(); } },
+            { text: "Menu", nextId: 0, effect: () => { localStorage.setItem('sv_endings', (endingsReached + 1)); window.location.href = 'index.html'; } }
+        ]
+    },
+
+    // === ROUTE B: SKEPTIC (New Content) ===
+    {
+        id: 100,
+        bg: 'pictures/empty roof with moon.png',
+        character: 'pictures/ghost lookikin .png',
+        speaker: 'Haru',
+        text: "No. Dead is dead. Ghosts are just guilt we haven't processed.",
+        effect: 'shake' // The world rejects this answer
+    },
+    {
+        id: 101,
+        bg: 'pictures/empty roof with moon.png',
+        character: 'pictures/ghost lookikin .png', // Glitching heavily
+        effect: 'glitch',
+        speaker: 'Girl',
+        text: "Is that so? Then who are you talking to?"
+    },
+    {
+        id: 102,
+        bg: 'pictures/corridor_night.png', // NEW ASSET
+        speaker: 'Haru',
+        text: "I blinked. The roof was gone. I was in the service corridor. I had never left the building.",
+        atmosphere: true
+    },
+    {
+        id: 103,
+        bg: 'pictures/corridor_night.png',
+        speaker: 'Sound',
+        text: "*click* *clack* *click* *clack*",
+        effect: 'shake'
+    },
+    {
+        id: 104,
+        bg: 'pictures/street_view.png', // NEW ASSET
+        speaker: 'Haru',
+        text: "I ran out to the street. It was empty. Completely empty. No cars. No people.",
+        atmosphere: true
+    },
+    {
+        id: 105,
+        bg: 'pictures/street_view.png',
+        foreground: 'pictures/old man .png', // Resusing old man creatively as a 'shadow'
+        speaker: 'Kohee Sama?',
+        text: "You shouldn't be out here, Haru. It's not your time to manifest."
+    },
+    {
+        id: 106,
+        bg: 'pictures/street_view.png',
+        speaker: 'Haru',
+        text: "Manifest? I'm alive! I'm breathing!"
+    },
+    {
+        id: 107,
+        bg: 'pictures/street_view.png',
+        foreground: 'pictures/dagger.png', // The truth
+        speaker: 'Voice',
+        text: "Look at your chest, Haru.",
+    },
+    {
+        id: 108,
+        bg: '#000',
+        speaker: 'Haru',
+        text: "(There was no heartbeat. Just the handle of a dagger, rusted with age, protruding from my ribs.)"
+    },
+    {
+        id: 109,
+        bg: '#000',
+        speaker: 'Girl',
+        text: "You didn't meet a ghost, Haru. You *are* the ghost.",
+        effect: 'glitch'
+    },
+    {
+        id: 110,
+        bg: '#000',
+        speaker: '',
+        text: "ENDING B: The Denial. (Truth Revealed)",
+        end: true,
+        choice: true,
+        options: [
+            { text: "Accept Fate", nextId: 0, effect: () => { localStorage.setItem('sv_endings', (endingsReached + 1)); location.reload(); } }
         ]
     }
 ];
@@ -373,8 +279,21 @@ const dialogueText = document.getElementById('dialogue-text');
 const choicesContainer = document.getElementById('choices-container');
 const startScreen = document.getElementById('start-screen');
 const audio = document.getElementById('bg-music');
+const atmosphereOverlay = document.getElementById('atmosphere');
 
 let typingInterval;
+
+// PARALLAX LOGIC
+document.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 20; // -10 to 10
+    const y = (e.clientY / window.innerHeight - 0.5) * 10; // -5 to 5
+
+    // Background moves opposite to mouse
+    vnBg.style.transform = `scale(1.1) translate(${-x}px, ${-y}px)`;
+
+    // Character moves faster for depth
+    characterLayer.style.transform = `translateX(-50%) translate(${-x * 1.5}px, ${-y * 1.5}px)`; // Maintain centering
+});
 
 function startStory() {
     startScreen.style.opacity = '0';
@@ -406,26 +325,40 @@ function loadStep(step) {
         vnBg.style.backgroundImage = 'none';
         vnBg.style.backgroundColor = step.bg;
     } else {
-        // Only update if changed to avoid flicker, unless it was a color before
         if (!vnBg.style.backgroundImage.includes(encodeURI(step.bg)) || vnBg.style.backgroundColor) {
-            vnBg.style.backgroundImage = `url('${step.bg}')`;
-            vnBg.style.backgroundColor = ''; // Reset color
+            vnBg.style.opacity = 0;
+            setTimeout(() => {
+                vnBg.style.backgroundImage = `url('${step.bg}')`;
+                vnBg.style.backgroundColor = '';
+                vnBg.style.opacity = 1;
+            }, 300); // Smooth fade transition between BGs
         }
     }
 
-    // 2. Character Logic
-    characterLayer.innerHTML = ''; // Clear prev character
+    // 3. Atmosphere Logic
+    if (step.atmosphere) {
+        atmosphereOverlay.style.display = 'block';
+    } else {
+        atmosphereOverlay.style.display = 'none';
+    }
+
+    // 4. Character Logic
+    characterLayer.innerHTML = '';
     if (step.character) {
         const charImg = document.createElement('img');
         charImg.src = step.character;
         charImg.classList.add('character-img');
+
+        if (step.effect === 'glitch') {
+            charImg.classList.add('glitch');
+        }
+
         characterLayer.appendChild(charImg);
-        // Trigger reflow/anim
         setTimeout(() => charImg.classList.add('active'), 10);
     }
 
-    // 3. Foreground Logic
-    foregroundLayer.innerHTML = ''; // Clear prev foreground
+    // 5. Foreground Logic
+    foregroundLayer.innerHTML = '';
     if (step.foreground) {
         const fgImg = document.createElement('img');
         fgImg.src = step.foreground;
@@ -434,7 +367,7 @@ function loadStep(step) {
         setTimeout(() => fgImg.classList.add('active'), 10);
     }
 
-    // 4. Speaker
+    // 6. Speaker
     if (step.speaker) {
         speakerName.innerText = step.speaker;
         speakerName.classList.add('visible');
@@ -442,15 +375,28 @@ function loadStep(step) {
         speakerName.classList.remove('visible');
     }
 
-    // 5. Choices
+    // 7. Effects
+    if (step.effect === 'shake') {
+        document.body.style.animation = 'shake 0.5s';
+        setTimeout(() => document.body.style.animation = '', 500);
+    } else if (step.effect === 'flash') {
+        const flash = document.createElement('div');
+        flash.style.position = 'fixed';
+        flash.style.inset = '0';
+        flash.style.backgroundColor = 'white';
+        flash.style.zIndex = '999';
+        flash.style.transition = 'opacity 0.2s';
+        document.body.appendChild(flash);
+        setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 200); }, 50);
+    }
+
+    // 8. Choices or Text
     if (step.choice) {
         dialogueBox.style.display = 'none';
         choicesContainer.innerHTML = '';
         choicesContainer.style.display = 'flex';
 
         step.options.forEach(opt => {
-            if (opt.req && !opt.req()) return;
-
             const btn = document.createElement('button');
             btn.classList.add('choice-btn');
             btn.innerText = opt.text;
@@ -460,58 +406,38 @@ function loadStep(step) {
             };
             choicesContainer.appendChild(btn);
         });
-        return;
     } else {
         dialogueBox.style.display = 'block';
         choicesContainer.style.display = 'none';
-    }
 
-    // 6. Effects (Shake / Flash)
-    if (step.effect === 'shake') {
-        document.body.style.animation = 'shake 0.5s';
-        setTimeout(() => document.body.style.animation = '', 500);
-    } else if (step.effect === 'flash') {
-        const flashOverlay = document.createElement('div');
-        flashOverlay.style.position = 'fixed';
-        flashOverlay.style.top = '0';
-        flashOverlay.style.left = '0';
-        flashOverlay.style.width = '100%';
-        flashOverlay.style.height = '100%';
-        flashOverlay.style.backgroundColor = 'white';
-        flashOverlay.style.zIndex = '9999';
-        flashOverlay.style.opacity = '1';
-        flashOverlay.style.transition = 'opacity 0.2s';
-        document.body.appendChild(flashOverlay);
-        setTimeout(() => {
-            flashOverlay.style.opacity = '0';
-            setTimeout(() => flashOverlay.remove(), 200);
-        }, 100);
-    }
+        // Typewriter
+        dialogueText.innerHTML = '';
+        let i = 0;
+        clearInterval(typingInterval);
 
-    // 7. Type Text
-    dialogueText.innerHTML = '';
-    let i = 0;
-    clearInterval(typingInterval);
-
-    if (step.end) {
-        document.querySelector('.click-indicator').style.display = 'none';
-    } else {
-        document.querySelector('.click-indicator').style.display = 'block';
-    }
-
-    typingInterval = setInterval(() => {
-        dialogueText.innerHTML += step.text.charAt(i);
-        i++;
-        if (i >= step.text.length) {
-            clearInterval(typingInterval);
+        if (step.end) {
+            document.querySelector('.click-indicator').style.display = 'none';
+        } else {
+            document.querySelector('.click-indicator').style.display = 'block';
         }
-    }, 30);
+
+        typingInterval = setInterval(() => {
+            // Use textContent to avoid HTML parsing issues during typing, or just simple substring
+            const currentText = step.text.substring(0, i + 1);
+            dialogueText.innerHTML = currentText + '<span class="typewriter-cursor"></span>';
+            i++;
+            if (i >= step.text.length) {
+                clearInterval(typingInterval);
+                dialogueText.innerHTML = step.text; // Remove cursor at end
+            }
+        }, 30);
+    }
 }
 
 function nextStep() {
     if (choicesContainer.style.display === 'flex' || currentStep.end) return;
 
-    if (dialogueText.innerHTML.length < currentStep.text.length) {
+    if (dialogueText.textContent.length < currentStep.text.length) {
         clearInterval(typingInterval);
         dialogueText.innerHTML = currentStep.text;
         return;
@@ -532,33 +458,10 @@ function chooseOption(nextId) {
     }
 }
 
-// === MEMORY SYSTEM ===
-const memoryNotification = document.getElementById('memory-notification');
-
 function showNotification(text) {
-    if (!memoryNotification) return;
-    memoryNotification.innerText = text;
-    memoryNotification.classList.add('show');
-    setTimeout(() => {
-        memoryNotification.classList.remove('show');
-    }, 4000); // Hide after 4s
+    const notif = document.getElementById('memory-notification');
+    if (!notif) return;
+    notif.innerText = text;
+    notif.classList.add('show');
+    setTimeout(() => notif.classList.remove('show'), 4000);
 }
-
-// Add Shake Animation to CSS dynamically
-const styleParams = document.createElement('style');
-styleParams.innerHTML = `
-@keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(3px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(3px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(1px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
-}
-`;
-document.head.appendChild(styleParams);
